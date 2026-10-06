@@ -1,0 +1,12 @@
+apiVersion: 1
+datasources:
+  - name: Orders
+    uid: orders-pg
+    type: postgres
+    url: db:5432
+    user: orders
+    jsonData:
+      database: orders
+      sslmode: disable
+    secureJsonData:
+      password: orders

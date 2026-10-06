@@ -1,0 +1,17 @@
+{
+  "cards": [
+    {
+      "name": "Paid revenue by month",
+      "display": "bar",
+      "sql": "SELECT substr(CAST(ordered_at AS TEXT), 1, 7) AS month, SUM(amount) AS revenue FROM orders WHERE status = 'PAID' GROUP BY 1 ORDER BY 1",
+      "expected": [["2026-01", 200.5], ["2026-02", 300], ["2026-03", 310.24]]
+    },
+    {
+      "name": "Orders by status",
+      "display": "pie",
+      "sql": "SELECT status, COUNT(*) AS n FROM orders GROUP BY 1 ORDER BY 1",
+      "expected": [["CANCELLED", 2], ["NEW", 1], ["PAID", 5]]
+    }
+  ],
+  "dashboard": {"name": "Orders overview"}
+}

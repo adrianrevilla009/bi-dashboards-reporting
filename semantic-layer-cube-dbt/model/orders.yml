@@ -1,0 +1,36 @@
+cubes:
+  - name: orders
+    sql_table: orders
+
+    joins:
+      - name: customers
+        sql: "{CUBE}.customer_id = {customers}.id"
+        relationship: many_to_one
+
+    measures:
+      - name: count
+        type: count
+      - name: paid_revenue
+        sql: amount
+        type: sum
+        filters:
+          - sql: "{CUBE}.status = 'PAID'"
+
+    dimensions:
+      - name: status
+        sql: status
+        type: string
+      - name: ordered_month
+        sql: "substr({CUBE}.ordered_at, 1, 7)"
+        type: string
+
+  - name: customers
+    sql_table: customers
+
+    dimensions:
+      - name: tenant
+        sql: tenant
+        type: string
+      - name: name
+        sql: name
+        type: string

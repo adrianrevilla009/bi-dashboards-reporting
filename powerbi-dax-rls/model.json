@@ -1,0 +1,28 @@
+{
+  "name": "OrdersModel",
+  "compatibilityLevel": 1567,
+  "tables": [
+    {"name": "Customers", "columns": ["id", "name", "tenant"]},
+    {"name": "Orders", "columns": ["id", "customer_id", "status", "amount", "ordered_at"]}
+  ],
+  "relationships": [
+    {"from": "Orders[customer_id]", "to": "Customers[id]", "crossFilteringBehavior": "oneDirection"}
+  ],
+  "measures": [
+    {"table": "Orders", "name": "Paid Revenue",
+     "dax": "CALCULATE(SUM(Orders[amount]), Orders[status] = \"PAID\")",
+     "sqlEquivalent": "SELECT COALESCE(SUM(o.amount), 0) FROM orders o JOIN customers c ON c.id = o.customer_id WHERE o.status = 'PAID'"},
+    {"table": "Orders", "name": "Cancel Rate",
+     "dax": "DIVIDE(CALCULATE(COUNTROWS(Orders), Orders[status] = \"CANCELLED\"), COUNTROWS(Orders))",
+     "sqlEquivalent": "SELECT 1.0 * SUM(o.status = 'CANCELLED') / COUNT(*) FROM orders o JOIN customers c ON c.id = o.customer_id"}
+  ],
+  "roles": [
+    {"name": "TenantAcme", "tablePermissions": [{"table": "Customers", "filterExpression": "Customers[tenant] = \"acme\"", "sqlPredicate": "c.tenant = 'acme'"}]},
+    {"name": "TenantGlobex", "tablePermissions": [{"table": "Customers", "filterExpression": "Customers[tenant] = \"globex\"", "sqlPredicate": "c.tenant = 'globex'"}]}
+  ],
+  "expected": {
+    "none": {"Paid Revenue": 810.74, "Cancel Rate": 0.25},
+    "TenantAcme": {"Paid Revenue": 300.49, "Cancel Rate": 0.25},
+    "TenantGlobex": {"Paid Revenue": 510.25, "Cancel Rate": 0.25}
+  }
+}

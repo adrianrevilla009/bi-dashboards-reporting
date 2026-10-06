@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="orders" pageWidth="595" pageHeight="842" columnWidth="515"
+              leftMargin="40" rightMargin="40" topMargin="40" bottomMargin="40">
+  <queryString>
+    <![CDATA[SELECT c.name AS customer, o.status AS status, o.amount AS amount FROM orders o JOIN customers c ON c.id = o.customer_id ORDER BY o.id]]>
+  </queryString>
+  <field name="customer" class="java.lang.String"/>
+  <field name="status" class="java.lang.String"/>
+  <field name="amount" class="java.math.BigDecimal"/>
+  <variable name="total" class="java.math.BigDecimal" calculation="Sum">
+    <variableExpression><![CDATA[$F{amount}]]></variableExpression>
+  </variable>
+  <title>
+    <band height="40">
+      <staticText><reportElement x="0" y="0" width="515" height="30"/><text><![CDATA[Orders report]]></text></staticText>
+    </band>
+  </title>
+  <columnHeader>
+    <band height="20">
+      <staticText><reportElement x="0" y="0" width="200" height="20"/><text><![CDATA[Customer]]></text></staticText>
+      <staticText><reportElement x="200" y="0" width="150" height="20"/><text><![CDATA[Status]]></text></staticText>
+      <staticText><reportElement x="350" y="0" width="165" height="20"/><text><![CDATA[Amount]]></text></staticText>
+    </band>
+  </columnHeader>
+  <detail>
+    <band height="20">
+      <textField><reportElement x="0" y="0" width="200" height="20"/><textFieldExpression><![CDATA[$F{customer}]]></textFieldExpression></textField>
+      <textField><reportElement x="200" y="0" width="150" height="20"/><textFieldExpression><![CDATA[$F{status}]]></textFieldExpression></textField>
+      <textField pattern="#,##0.00"><reportElement x="350" y="0" width="165" height="20"/><textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression></textField>
+    </band>
+  </detail>
+  <summary>
+    <band height="30">
+      <textField pattern="#,##0.00"><reportElement x="350" y="5" width="165" height="20"/><textFieldExpression><![CDATA[$V{total}]]></textFieldExpression></textField>
+    </band>
+  </summary>
+</jasperReport>

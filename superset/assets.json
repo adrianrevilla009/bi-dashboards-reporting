@@ -1,0 +1,19 @@
+{
+  "database": {
+    "database_name": "orders",
+    "sqlalchemy_uri": "postgresql+psycopg2://orders:orders@db:5432/orders"
+  },
+  "dataset": {
+    "table_name": "revenue_by_month",
+    "sql": "SELECT substr(CAST(ordered_at AS TEXT), 1, 7) AS month, SUM(amount) AS revenue FROM orders WHERE status = 'PAID' GROUP BY 1"
+  },
+  "chart": {
+    "slice_name": "Paid revenue by month",
+    "viz_type": "echarts_timeseries_bar",
+    "params": {"x_axis": "month", "metrics": ["revenue"]}
+  },
+  "dashboard": {
+    "dashboard_title": "Orders overview",
+    "slug": "orders-overview"
+  }
+}

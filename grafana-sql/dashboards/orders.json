@@ -1,0 +1,26 @@
+{
+  "uid": "orders-overview",
+  "title": "Orders overview",
+  "schemaVersion": 39,
+  "time": {"from": "2026-01-01T00:00:00Z", "to": "2026-04-30T00:00:00Z"},
+  "panels": [
+    {
+      "id": 1, "type": "timeseries", "title": "Paid revenue per day",
+      "gridPos": {"x": 0, "y": 0, "w": 12, "h": 8},
+      "datasource": {"type": "postgres", "uid": "orders-pg"},
+      "targets": [{
+        "refId": "A", "format": "time_series", "rawQuery": true, "editorMode": "code",
+        "rawSql": "SELECT ordered_at AS time, SUM(amount) AS paid FROM orders WHERE status = 'PAID' AND $__timeFilter(ordered_at) GROUP BY 1 ORDER BY 1"
+      }]
+    },
+    {
+      "id": 2, "type": "bargauge", "title": "Orders by status",
+      "gridPos": {"x": 12, "y": 0, "w": 12, "h": 8},
+      "datasource": {"type": "postgres", "uid": "orders-pg"},
+      "targets": [{
+        "refId": "A", "format": "table", "rawQuery": true, "editorMode": "code",
+        "rawSql": "SELECT status, COUNT(*) AS orders FROM orders WHERE $__timeFilter(ordered_at) GROUP BY 1"
+      }]
+    }
+  ]
+}
